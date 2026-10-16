@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Exported design mockups (vendor React runtime), not source.
+    "design-ref/**",
   ]),
 ]);
 
