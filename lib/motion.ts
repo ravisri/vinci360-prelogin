@@ -51,6 +51,12 @@ export const drawLine: Variants = {
   show: { pathLength: 1, transition: { ...transition, duration: drawDuration } },
 }
 
+/** 404 chart: the drawn line collapses onto its baseline once the draw has finished (pair with non-scaling strokes). */
+export const flattenY: Variants = {
+  hidden: { scaleY: 1, originY: 1 },
+  show: { scaleY: 0.01, originY: 1, transition: { ...transition, duration: 0.6, delay: drawDuration + 0.3 } },
+}
+
 export const fadeInLate: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { ...transition, delay: drawDuration * 0.75 } },

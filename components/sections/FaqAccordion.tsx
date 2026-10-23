@@ -8,6 +8,8 @@ export type Faq = { question: string; answer: string }
 
 type FaqAccordionProps = {
   title: string
+  /** Optional line under the heading, e.g. "Three quick answers." */
+  lead?: string
   items: readonly Faq[]
   /** Emit FAQPage JSON-LD (only where the FAQ is visible). */
   jsonLd?: boolean
@@ -20,10 +22,17 @@ type FaqAccordionProps = {
  * Heading left, questions right. First answer open; answers are force-mounted so every word is in
  * the server HTML (closed ones are `hidden`, not removed).
  */
-export function FaqAccordion({ title, items, jsonLd = true, after, className }: FaqAccordionProps) {
+export function FaqAccordion({ title, lead, items, jsonLd = true, after, className }: FaqAccordionProps) {
   return (
     <section className={cn("container-site section-y grid items-start gap-8 lg:grid-cols-[380px_minmax(0,1fr)] lg:gap-14", className)}>
-      <h2 className="text-h3 md:text-h2">{title}</h2>
+      {lead ? (
+        <div className="flex flex-col gap-2.5">
+          <h2 className="text-h3 md:text-h2">{title}</h2>
+          <p className="text-[1.0625rem] text-muted-foreground">{lead}</p>
+        </div>
+      ) : (
+        <h2 className="text-h3 md:text-h2">{title}</h2>
+      )}
       <div className="flex flex-col gap-2.5">
         <Accordion type="single" collapsible defaultValue="faq-0" className="gap-2.5">
           {items.map((item, i) => (

@@ -1430,3 +1430,20 @@ export const aboutPrinciples = {
   ],
   reach: "1.8M",
 } as const
+
+/* --------------------------------------------------------------------------
+   Log in preview (Login.dc.html): the weekly KPIs plus mention volume by day.
+   -------------------------------------------------------------------------- */
+export const loginPreview = {
+  filters: ["Last 7 days", "All networks", "Brand: Aurora Mobile"],
+  /** Mention volume line, Mon–Sun (0–100 plot units), peaking on Thursday. */
+  volume: [38, 46, 58, 86, 70, 54, 62],
+  days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  /** KPI sparklines (Mentions, Engagement, Net sentiment), shape only. */
+  sparks: [
+    [4, 6, 5, 9, 12, 14, 18],
+    [6, 5, 8, 9, 11, 10, 14],
+    [16, 14, 15, 12, 13, 10, 11],
+  ],
+  mention: { initials: "KR", handle: "@kr_tech", network: "x", text: "“Update 4.2 drained my battery overnight.”", sentiment: "neg" },
+} as const

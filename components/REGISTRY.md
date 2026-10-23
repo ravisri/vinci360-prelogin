@@ -19,6 +19,7 @@ shadcn primitives, edited in place (never wrapped in copies). All accept `classN
 - `Slider` — `value, onValueChange, min, max, step` — Radix slider (slider.tsx)
 - `Switch` — `checked, onCheckedChange` — Radix switch (switch.tsx)
 - `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` — `orientation; List variant` — Radix tabs (arrow keys, roving tabindex) (tabs.tsx)
+- `Popover`, `PopoverTrigger`, `PopoverContent`, `PopoverAnchor`, `PopoverHeader`, `PopoverTitle`, `PopoverDescription` — `Content side, align, sideOffset` — Radix popover (Esc closes, focus returns); contact office pins (popover.tsx)
 - `Textarea` — — — Multi-line input (textarea.tsx)
 - `ToggleGroup`, `ToggleGroupItem` — `type, value, onValueChange, variant, size, spacing, orientation` — Radix toggle group (wrapped by mocks/smi/Segmented) (toggle-group.tsx)
 - `Toggle` — `variant, size` — Radix toggle + toggleVariants (toggle.tsx)
@@ -30,18 +31,20 @@ shadcn primitives, edited in place (never wrapped in copies). All accept `classN
 - `MegaMenu` — — — Desktop primary nav. (MegaMenu.tsx)
 - `MobileNav` — `className` — Mobile/tablet navigation in a right-hand Sheet (focus trapped, Esc closes, focus returns to the trigger). (MobileNav.tsx)
 - `MsrcosmosLink` — `children, className` — "MSRcosmos" placeholder link (className replaces the default link style, e.g. button classes on About): focusable with a tooltip, no navigation until the URL is confirmed. (MsrcosmosLink.tsx)
+- `LoginHeader` — — — Minimal /login header: logo, ghost "Back to website" (lg+), cta "Request a demo"; used by app/(auth)/layout. (LoginHeader.tsx)
 - `NavLink` — `href, variant, className` — Link that marks itself with aria-current="page" (bold + underline) when active. (NavLink.tsx)
 - `SiteFooter` — — — Site footer: brand column, Platform / Solutions / Company / Legal link columns, copyright bar. (SiteFooter.tsx)
 - `SiteHeader` — — — Sticky site header: logo, primary nav with mega menu (lg+), Log in, Request a demo, mobile sheet (<lg). (SiteHeader.tsx)
 
 ## components/sections/
 - `BenefitList` — `items, accent, columns, iconClassName, className` — 40px tinted icon tile + bold title + muted line. (BenefitList.tsx)
-- `CtaBand` — `title, lead, label, placeholder, buttonLabel, action, id, className` — Navy closing band: H2, lead, work-email field and the filled CTA. (CtaBand.tsx)
-- `FaqAccordion` — `title, items, jsonLd, after, className` — Heading left, questions right; `after` renders under the questions (e.g. Terms placeholder card). (FaqAccordion.tsx)
+- `CtaBand` — `variant (full·slim); full: title, lead, label, placeholder, buttonLabel, action, id · slim: title, buttonLabel, href; className` — Navy closing band: H2, lead, work-email field and the filled CTA; `slim` = H2 + filled CTA link on one row (Contact). (CtaBand.tsx)
+- `FaqAccordion` — `title, lead, items, jsonLd, after, className` — Optional `lead` under the heading. Heading left, questions right; `after` renders under the questions (e.g. Terms placeholder card). (FaqAccordion.tsx)
 - `FeatureSplit` — `accent, reverse, visualFirstOnMobile, chip, chipVariant, badge, title, lead, benefits, benefitIconClassName, tells, metrics, hint, hintIcon, hintVariant, note, action, visual, headingAs, variant, id, className` — Text + visual side by side. (FeatureSplit.tsx)
 - `FeatureTabs` — `label, tabs, panels, className` — Feature-area tab strip (Radix: roving tabindex, ←/→/Home/End). (FeatureTabs.tsx)
 - `GlossaryFilter` — `className` — Feature glossary with an area filter. (GlossaryFilter.tsx)
 - `Hero` — `variant, breadcrumb, chip, chipExtra, title, lead, primary, secondary (label, href, icon), trailing, visual, after, className` — Page hero: chip, H1, lead, CTA + outline button (play icon unless `icon`), optional trailing line and visual. (Hero.tsx)
+- `ErrorView` — `variant (404·500), chip, title, text, illustration, primary, secondary (label, icon, href | onClick)` — 404/500 body: chip, H1, lead, actions + illustration panel; "Where do you want to go?" lift tiles; "Still lost?" link bar. Server-safe, also used by client error.tsx. (ErrorView.tsx)
 - `HowToUse` — `title, lead, steps (text optional), accent, variant, action, className` — Three numbered step cards with an illustration or icon, badge, title and optional line; `action` = link beside the heading. (HowToUse.tsx)
 - `IconCardGrid` — `items, className` — White icon cards in a 3/2/1 grid: 44px primary-tint icon tile, bold title, one muted line. (IconCardGrid.tsx)
 - `ModuleChip` — `accent, label, variant, size, dot, bordered, className` — Module pill: tint + text-safe accent, optional dot in the module fill. (ModuleChip.tsx)
@@ -70,6 +73,17 @@ Shared form kit (Demo, Contact, Login). react-hook-form + zod + shadcn controls.
 - `SubmitButton` — `variant (cta default), submitting, sendingLabel, …Button props` — Full-width submit: spinner + aria-busy + disabled, label kept or swapped. (SubmitButton.tsx)
 - `FormStatus` — `variant (success·error), title, children, onRetry, retryLabel, className` — Success / failure panel; heading takes focus on mount; error has Retry. Also `FormLive` (polite status region). (FormStatus.tsx)
 - `FormStateSwap` — `stateKey, children, className` — Cross-fades form ↔ success ↔ error while the box eases to the new height (overflow-y clip, sticky-safe). (FormStateSwap.tsx)
+
+## components/login/
+- `LoginCard` — — — Log in state machine (log in · validation errors · invalid credentials · submitting · forgot · sent · `?signed-out=1` notice): views cross-fade via FormStateSwap, focus moves to each heading, mocked 1s actions (password "wrong" fails). Wrap in Suspense (reads search params). (LoginCard.tsx)
+
+## components/sections/contact/
+- `ContactTopicProvider`, `useContactTopic()` — `children` — Shares the topic picked on a routing card with the contact form. (RouteCards.tsx)
+- `RouteCards` — `className` — "What do you need?": four routing cards in a radio group (arrows move); Demo → /request-demo, Log in → /login, the other two set the form topic and jump to #form. (RouteCards.tsx)
+- `ContactForm` — `className` — "Send us a message" (#form): topic, names, email, company, role, message (1000), consent, honeypot; error summary, sending, success "Thanks, {name}…", failure + Retry; sticky submit bar below md. (ContactForm.tsx)
+- `OfficeMap` — `className` — "Our offices": next/image base map + HTML pins by %; dots drop in with a stagger, pulse ring on primary; xl+ label-pill buttons with leader lines, below xl one 44px button per region; each opens a Popover with placeholders. (OfficeMap.tsx)
+- `MsrcosmosCard` — `className` — "Powered by MSRcosmos" card: logo placeholder, About / Privacy / Terms links, placeholder "Visit msrcosmos.com" (tooltip, no navigation). (MsrcosmosCard.tsx)
+- `contactExploreThumbnails` — array of 3 nodes — "Keep exploring" thumbnails (tour steps, feature grid, role pills). (ExploreThumbnails.tsx)
 
 ## components/sections/demo/
 - `DemoForm` — — — "Tell us about you" (#form): request type, names, email, company, role, brand, competitor chips (max 2), keyword, networks, notes (500), consent, honeypot; error summary, sending, success summary, failure + Retry; sticky submit bar below md. (DemoForm.tsx)
@@ -165,6 +179,14 @@ Shared form kit (Demo, Contact, Login). react-hook-form + zod + shadcn controls.
 - `ShareBar` — `segs, ariaLabel, height, className` — 100% (or partial) horizontal share bar in chart tones, grows from the left; percent geometry, no inline styles. (ShareBar.tsx)
 - `channelsStepIllustrations`, `channelsRelatedThumbnails` — arrays of 3 nodes — Step and related thumbnails (ChannelsIllustrations.tsx)
 - `dk`, `wt`, `fpill`, `avatar`, `dtab`, `mchip`, `pickerItem`, `checkBadge`, `hotspotSide` — class strings — Shared in-mock styles (styles.ts)
+
+## components/mocks/errors/
+- `ErrorChartFrame` — `caption, title, value, delta, note, noteIcon, hint, floatTitle, floatChip, children` — Shared dark chart card + float card for the error illustrations. (ErrorChartFrame.tsx)
+- `EmptyChartMock` — — — 404: mentions line draws in, then flattens onto zero (`flattenY` preset). (EmptyChartMock.tsx)
+- `PausedChartMock` — — — 500: line stops part-way at a dashed pause line with a warning marker. (PausedChartMock.tsx)
+
+## components/mocks/login/
+- `LoginPreviewMock` — — — Log in right panel: 3 weekly KPIs, mention volume line, light @kr_tech mention float (clear of KPI labels), tagline + networks. Place inside an `on-dark` aside. (LoginPreviewMock.tsx)
 
 ## components/mocks/compare/
 - `BrandHatchDefs` — `id, brand, stretched, scaleX` — Brand-coloured hatch (base fill + dark stripes) for "owned alone" bars and the Kestrel segment. (BrandStack.tsx)

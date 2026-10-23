@@ -3,8 +3,6 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google"
 
 import "./globals.css"
 import { Providers } from "@/components/providers"
-import { SiteFooter } from "@/components/layout/SiteFooter"
-import { SiteHeader } from "@/components/layout/SiteHeader"
 import { JsonLd, organization } from "@/lib/seo"
 import { defaultDescription, defaultTitle, siteName, siteUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
@@ -60,11 +58,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <Providers>
-          <SiteHeader />
-          <main id="main" tabIndex={-1} className="outline-none">
-            {children}
-          </main>
-          <SiteFooter />
+          {children}
         </Providers>
         <JsonLd data={organization()} />
       </body>
