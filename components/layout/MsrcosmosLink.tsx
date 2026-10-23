@@ -1,9 +1,11 @@
 "use client"
 
+import type { ReactNode } from "react"
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
-/** "MSRcosmos" placeholder link: focusable with a tooltip, no navigation until the URL is confirmed. */
-export function MsrcosmosLink() {
+/** "MSRcosmos" placeholder link: focusable with a tooltip, no navigation until the URL is confirmed. `className` replaces the inline style (e.g. button classes on About). */
+export function MsrcosmosLink({ children = "MSRcosmos", className }: { children?: ReactNode; className?: string }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -11,9 +13,9 @@ export function MsrcosmosLink() {
           role="link"
           tabIndex={0}
           aria-disabled="true"
-          className="cursor-help rounded-xs font-bold text-foreground underline decoration-dotted underline-offset-3"
+          className={className ?? "cursor-help rounded-xs font-bold text-foreground underline decoration-dotted underline-offset-3"}
         >
-          MSRcosmos
+          {children}
         </span>
       </TooltipTrigger>
       <TooltipContent side="top" sideOffset={6}>

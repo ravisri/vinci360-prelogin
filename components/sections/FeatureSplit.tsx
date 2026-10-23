@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { ArrowRight, Pointer } from "lucide-react"
+import { ArrowRight, Pointer, type LucideIcon } from "lucide-react"
 
 import { Reveal } from "@/components/motion/Reveal"
 import { BenefitList, type Benefit } from "@/components/sections/BenefitList"
@@ -23,17 +23,21 @@ type FeatureSplitProps = {
   chipVariant?: "tint" | "solid"
   /** … or a step number (feature-page walkthrough rows). */
   badge?: number
-  title: string
+  title: ReactNode
   lead: string
   benefits?: readonly Benefit[]
   /** Icon tile override for the benefit list (navy Stories band). */
   benefitIconClassName?: string
   /** "What it tells you:" + text, behind a 2px accent rule. */
-  tells?: { label: string; text: string }
-  /** Metric chips, e.g. Mentions · Engagement · Reach. */
-  metrics?: readonly string[]
+  tells?: { label: string; text: ReactNode }
+  /** Metric chips, e.g. Mentions · Engagement · Reach; an object form can hide a chip at one size. */
+  metrics?: readonly (string | { label: string; className?: string })[]
   /** Dashed "try it" hint with a pointer icon. */
-  hint?: string
+  hint?: ReactNode
+  /** Icon of the hint, when it is not a "click here" (e.g. a download hint). */
+  hintIcon?: LucideIcon
+  /** try = dashed "try it" box · insight = solid box with a bold takeaway (Brand Compare reference). */
+  hintVariant?: "try" | "insight"
   note?: ReactNode
   /** "Explore …" primary button. */
   action?: Action
@@ -61,6 +65,8 @@ export function FeatureSplit({
   tells,
   metrics,
   hint,
+  hintIcon: HintIcon = Pointer,
+  hintVariant = "try",
   note,
   action,
   visual,
@@ -88,21 +94,24 @@ export function FeatureSplit({
         )}
         {metrics && (
           <ul className="flex flex-wrap gap-1.5">
-            {metrics.map((m) => (
-              <li key={m}>
-                <ModuleChip accent={accent} label={m} dot={false} />
-              </li>
-            ))}
+            {metrics.map((m) => {
+              const { label, className } = typeof m === "string" ? { label: m, className: undefined } : m
+              return (
+                <li key={label} className={className}>
+                  <ModuleChip accent={accent} label={label} dot={false} />
+                </li>
+              )
+            })}
           </ul>
         )}
         {hint && (
           <p
             className={cn(
-              "flex items-start gap-2.5 rounded-lg border border-dashed bg-card px-3 py-2.5 text-sm text-neutral-text",
-              accent === "smi" ? "border-input" : a.border200,
+              "flex items-start gap-2.5 rounded-lg border bg-card px-3 py-2.5 text-sm",
+              hintVariant === "insight" ? "border-border font-semibold text-foreground" : ["border-dashed text-neutral-text", accent === "smi" ? "border-input" : a.border200],
             )}
           >
-            <Pointer aria-hidden="true" strokeWidth={2} className={cn("mt-px size-4.5 flex-none", a.text)} />
+            <HintIcon aria-hidden="true" strokeWidth={2} className={cn("mt-px size-4.5 flex-none", a.text)} />
             {hint}
           </p>
         )}
@@ -117,7 +126,7 @@ export function FeatureSplit({
           </Button>
         )}
       </Reveal>
-      <Reveal preset="scaleIn" className={cn("min-w-0 lg:flex-1", panel && "relative lg:flex-[999_1_560px]", reverse && "lg:order-first", visualFirstOnMobile && "order-first")}>
+      <Reveal preset="scaleIn" className={cn("min-w-0 lg:flex-1", panel && "relative lg:flex-[999_1_560px]", reverse && "lg:order-first", visualFirstOnMobile && "max-lg:order-first")}>
         {visual}
       </Reveal>
     </article>

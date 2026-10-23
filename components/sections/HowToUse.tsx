@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
-import type { LucideIcon } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight, type LucideIcon } from "lucide-react"
 
 import { Stagger, StaggerItem } from "@/components/motion/Stagger"
 import { SectionHeader } from "@/components/sections/SectionHeader"
@@ -9,7 +10,7 @@ import { cn } from "@/lib/utils"
 
 export type Step = {
   title: string
-  text: string
+  text?: string
   /** Small decorative illustration (110px box). */
   illustration?: ReactNode
   /** Navy illustration box (`on-dark`) instead of the light canvas. */
@@ -25,16 +26,28 @@ type HowToUseProps = {
   accent: Accent
   /** card = white cards with illustration (feature pages) · plain = canvas cards with number circle + icon (Home). */
   variant?: "card" | "plain"
+  /** Link beside the heading, e.g. "Start with a demo request" (About). */
+  action?: { label: string; href: string }
   className?: string
 }
 
 /** Three numbered step cards with an illustration or icon, badge, title and line. */
-export function HowToUse({ title, lead, steps, accent, variant = "card", className }: HowToUseProps) {
+export function HowToUse({ title, lead, steps, accent, variant = "card", action, className }: HowToUseProps) {
   const plain = variant === "plain"
   const a = accents[accent]
   return (
     <section className={cn("container-site section-y flex flex-col gap-8 md:gap-10", className)}>
-      <SectionHeader title={title} lead={lead} align={plain ? "center" : "left"} />
+      {action ? (
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <SectionHeader title={title} lead={lead} />
+          <Link href={action.href} className={cn("inline-flex min-h-11 items-center gap-1.5 font-semibold no-underline hover:underline", a.text)}>
+            {action.label}
+            <ArrowRight aria-hidden="true" strokeWidth={2} className="size-4" />
+          </Link>
+        </div>
+      ) : (
+        <SectionHeader title={title} lead={lead} align={plain ? "center" : "left"} />
+      )}
       <Stagger as="ol" className="grid gap-5 md:grid-cols-3">
         {steps.map((step, i) => {
           const Icon = step.icon
@@ -74,7 +87,7 @@ export function HowToUse({ title, lead, steps, accent, variant = "card", classNa
                   </h3>
                 </div>
               )}
-              <p className="text-[0.9375rem] text-muted-foreground">{step.text}</p>
+              {step.text && <p className="text-[0.9375rem] text-muted-foreground">{step.text}</p>}
             </StaggerItem>
           )
         })}

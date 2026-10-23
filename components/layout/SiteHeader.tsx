@@ -1,10 +1,11 @@
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
+import { HeaderCta } from "@/components/layout/HeaderCta"
 import { Logo } from "@/components/layout/Logo"
 import { MegaMenu } from "@/components/layout/MegaMenu"
 import { MobileNav } from "@/components/layout/MobileNav"
-import { ctaLink, loginLink } from "@/content/navigation"
+import { loginLink } from "@/content/navigation"
 
 /** Sticky site header: logo, primary nav with mega menu (lg+), Log in, Request a demo, mobile sheet (<lg). */
 export function SiteHeader() {
@@ -21,9 +22,7 @@ export function SiteHeader() {
               {loginLink.label}
             </Link>
           </Button>
-          <Button variant="cta" asChild className="hidden sm:inline-flex">
-            <Link href={ctaLink.href}>{ctaLink.label}</Link>
-          </Button>
+          <HeaderCta className="hidden sm:inline-flex" />
           <MobileNav className="lg:hidden" />
         </div>
       </div>

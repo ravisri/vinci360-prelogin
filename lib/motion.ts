@@ -78,6 +78,15 @@ export const crossFade: Variants = {
   exit: { opacity: 0, transition: { ...transition, duration: 0.25 } },
 }
 
+/** Rows re-ranking under a sort toggle (Motion `layout`, see components/motion/LayoutMotion). */
+export const reorder: Transition = { duration: 0.45, ease: easeOutExpo }
+
+/** Breakout row: an accent ring that flashes twice (opacity only). */
+export const flashTwice: { animate: TargetAndTransition; transition: Transition } = {
+  animate: { opacity: [0, 1, 0] },
+  transition: { duration: 1.1, ease: "easeInOut", repeat: 1 },
+}
+
 /** "Click here" nudge over a hotspot: a small bob (static with reduced motion). */
 export const nudgeBob: { animate: TargetAndTransition; transition: Transition } = {
   animate: { y: [0, -5, 0] },
@@ -91,5 +100,26 @@ export const widgetPulse = {
   transition: { duration: 0.6, ease: easeOutExpo },
 }
 
-export const presets = { fadeUp, fadeIn, scaleIn, floatIn } as const
+/** Last card of a drawn flow: slides in from the left once the connectors before it have drawn. */
+export const slideInLate: Variants = {
+  hidden: { opacity: 0, x: -24 },
+  show: { opacity: 1, x: 0, transition: { ...transition, delay: 1.9 } },
+}
+
+/** About hero hub: one pulse once the connectors have drawn (transform + opacity only). */
+export const pulseOnce: { animate: TargetAndTransition; transition: Transition } = {
+  animate: { scale: [1, 1.35, 1] },
+  transition: { duration: 0.9, ease: "easeInOut", delay: 1.5 },
+}
+
+/** Ring that expands and fades out once, alongside `pulseOnce`. */
+export const ringOnce: { animate: TargetAndTransition; transition: Transition } = {
+  animate: { scale: [1, 2.4], opacity: [0.6, 0] },
+  transition: { duration: 1.1, ease: easeOutExpo, delay: 1.5 },
+}
+
+export const presets = { fadeUp, fadeIn, scaleIn, floatIn, slideInLate } as const
 export type Preset = keyof typeof presets
+
+/** Form state swap (form → success | error): the card eases to its new height while the content cross-fades. */
+export const heightSwap: Transition = { duration: 0.4, ease: easeOutExpo }

@@ -5,8 +5,8 @@ import { m, useReducedMotion } from "motion/react"
 
 import { transition, viewport } from "@/lib/motion"
 
-/** SVG path that draws itself (pathLength 0→1) when scrolled into view. */
-export function DrawPath({ duration = 1.2, ...props }: ComponentProps<typeof m.path> & { duration?: number }) {
+/** SVG path that draws itself (pathLength 0→1) when scrolled into view; `delay` sequences several paths. */
+export function DrawPath({ duration = 1.2, delay = 0, ...props }: ComponentProps<typeof m.path> & { duration?: number; delay?: number }) {
   const reduced = useReducedMotion()
   return (
     <m.path
@@ -15,7 +15,7 @@ export function DrawPath({ duration = 1.2, ...props }: ComponentProps<typeof m.p
       initial={reduced ? false : { pathLength: 0 }}
       whileInView={{ pathLength: 1 }}
       viewport={viewport}
-      transition={{ ...transition, duration }}
+      transition={{ ...transition, duration, delay }}
       {...props}
     />
   )

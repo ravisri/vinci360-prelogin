@@ -5,10 +5,10 @@ import { m, useReducedMotion } from "motion/react"
 
 import { fadeUp, stagger, viewport } from "@/lib/motion"
 
-type ListTag = "div" | "ol" | "ul"
-type ItemTag = "div" | "li"
+type ListTag = "div" | "ol" | "ul" | "tbody" | "dl"
+type ItemTag = "div" | "li" | "tr"
 
-/** Container that reveals its StaggerItem children one after another. `as` keeps list semantics (ol/ul + li). */
+/** Container that reveals its StaggerItem children one after another. `as` keeps list and table semantics (ol/ul + li, tbody + tr). */
 export function Stagger({ delay, as = "div", ...props }: ComponentProps<typeof m.div> & { delay?: number; as?: ListTag }) {
   const reduced = useReducedMotion()
   const Tag = m[as] as typeof m.div

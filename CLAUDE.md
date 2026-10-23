@@ -228,5 +228,7 @@ All buttons: min touch target 44×44, visible 2px focus ring, and loading state 
 
 - One page per session. Start in plan mode, list the sections and the components you'll reuse, then implement.
 - Reuse before creating: check `components/sections` and `components/mocks` first.
+- Read `design-ref/slim/*` first for layout, copy and order; open the full `design-ref/**/*.dc.html` only when you need exact chart values or styles. Re-run `npm run slim-ref` after the references change.
+- Read `components/REGISTRY.md` first, before creating any component; add one line (name — props — purpose) for every component you add or whose props change.
 - Keep commits small, one section or component each, with clear messages.
 - If the reference and this file conflict, **this file wins** for tokens and rules, and **the reference wins** for layout and copy. Flag the conflict in your summary.

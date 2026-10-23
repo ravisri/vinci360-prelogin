@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { NavLink } from "@/components/layout/NavLink"
-import { ctaLink, features, loginLink, platformLink, primaryNav, tourLink } from "@/content/navigation"
+import { features, loginLink, platformLink, primaryNav, tourLink } from "@/content/navigation"
+import { HeaderCta } from "@/components/layout/HeaderCta"
 import { cn } from "@/lib/utils"
 
 /** Mobile/tablet navigation in a right-hand Sheet (focus trapped, Esc closes, focus returns to the trigger). */
@@ -65,9 +66,7 @@ export function MobileNav({ className }: { className?: string }) {
               </Button>
             </SheetClose>
             <SheetClose asChild>
-              <Button variant="cta" asChild>
-                <Link href={ctaLink.href}>{ctaLink.label}</Link>
-              </Button>
+              <HeaderCta />
             </SheetClose>
           </div>
         </nav>

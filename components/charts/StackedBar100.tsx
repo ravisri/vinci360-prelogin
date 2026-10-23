@@ -17,6 +17,10 @@ type StackedBar100Props = {
   /** Bar height in px; labels show from 18px up, on segments of 12% or more. */
   height?: number
   labels?: boolean
+  /** Text inside each segment instead of "▲ 52%", e.g. compact counts ("15.6K"); empty = no label. */
+  segmentLabels?: readonly [string, string, string]
+  /** Share of the track the whole bar fills (0–1), e.g. a row scaled to its volume in a counts view. */
+  extent?: number
   /** Outlined to call this row out (e.g. a mixed topic). */
   highlight?: boolean
   className?: string
@@ -28,10 +32,10 @@ const TEXT: Record<Sentiment, string> = { pos: "fill-ink", neu: "fill-ink", neg:
 const GAP = 2
 
 /** 100% stacked sentiment bar. Negative is hatched (SVG pattern) so it never relies on colour. */
-export function StackedBar100({ data, ariaLabel, height = 24, labels = height >= 18, highlight, className }: StackedBar100Props) {
+export function StackedBar100({ data, ariaLabel, height = 24, labels = height >= 18, segmentLabels, extent = 1, highlight, className }: StackedBar100Props) {
   const hatch = useHatchId()
   const label = ariaLabel ?? ORDER.map((s, i) => `${sentimentLabel[s]} ${data[i]}%`).join(", ")
-  const starts = ORDER.map((_, i) => data.slice(0, i).reduce((a, b) => a + b, 0))
+  const starts = ORDER.map((_, i) => data.slice(0, i).reduce((a, b) => a + b, 0) * extent)
 
   return (
     <div className={cn("rounded-sm", highlight && "outline-2 outline-offset-2 outline-chart-3", className)}>
@@ -41,13 +45,15 @@ export function StackedBar100({ data, ariaLabel, height = 24, labels = height >=
           {ORDER.map((s, i) => {
             const share = data[i]
             if (!share) return null
+            const width = share * extent
             const inset = i ? GAP : 0
+            const text = segmentLabels ? segmentLabels[i] : `${sentimentGlyph[s]} ${share}%`
             return (
-              <svg key={s} x={`${starts[i]}%`} width={`${share}%`} height={height}>
+              <svg key={s} x={`${starts[i]}%`} width={`${width}%`} height={height}>
                 <rect x={inset} width="100%" height={height} className={FILL[s]} fill={s === "neg" ? `url(#${hatch})` : undefined} />
-                {labels && share >= 12 && (
+                {labels && width >= 12 && text && (
                   <text x={inset + 5} y={height / 2} dominantBaseline="central" fontSize="12" className={cn("font-semibold tabular max-sm:hidden", TEXT[s])}>
-                    {sentimentGlyph[s]} {share}%
+                    {text}
                   </text>
                 )}
               </svg>

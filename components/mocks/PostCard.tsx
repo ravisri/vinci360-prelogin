@@ -11,7 +11,8 @@ type PostCardProps = {
   /** Avatars are initials only, never photos. */
   initials: string
   handle: string
-  time: string
+  /** Omitted when the reference shows no time (Promotable Stories posts). */
+  time?: string
   network: Network
   text: string
   sentiment: Sentiment
@@ -24,6 +25,43 @@ type PostCardProps = {
   /** light = floating white card; dark = feed row inside a MockFrame. */
   tone?: "light" | "dark"
   className?: string
+}
+
+type PostRowProps = Pick<PostCardProps, "initials" | "network" | "text" | "sentiment" | "linkLabel" | "className"> & {
+  /** e.g. "2.4K". */
+  engagement: string
+  /** Tooltip on the link label, e.g. "Opens the original post in the product". */
+  linkTitle?: string
+}
+
+/**
+ * One-line dark post row (avatar · network · text · sentiment · engagement · link), as in the
+ * "posts behind a segment" lists. Wraps below sm so the text keeps a readable width.
+ */
+export function PostRow({ initials, network, text, sentiment, engagement, linkLabel, linkTitle, className }: PostRowProps) {
+  return (
+    <article className={cn("flex flex-wrap items-center gap-x-2.5 gap-y-1.5 border-t border-border py-2 text-[0.78125rem] sm:flex-nowrap", className)}>
+      <span aria-hidden="true" className="grid size-7 flex-none place-items-center rounded-full bg-border text-[0.625rem] font-bold">
+        {initials}
+      </span>
+      <span className="flex-none text-muted-foreground">
+        <NetworkIcon network={network} className="size-3.75" />
+        <span className="sr-only">{networks[network]}</span>
+      </span>
+      <p className="min-w-0 flex-[1_1_12rem]">{text}</p>
+      <SentimentChip sentiment={sentiment} className="text-[0.65625rem]" />
+      <span className="text-[0.6875rem] text-muted-foreground tabular">
+        {engagement}
+        <span className="sr-only"> engagements</span>
+      </span>
+      {linkLabel && (
+        <span title={linkTitle} className="inline-flex min-h-8 items-center gap-0.75 text-[0.71875rem] text-on-dark-focus">
+          {linkLabel}
+          <ExternalLink aria-hidden="true" strokeWidth={2} className="size-2.75" />
+        </span>
+      )}
+    </article>
+  )
 }
 
 const metricIcons = [
@@ -50,10 +88,12 @@ export function PostCard({ initials, handle, time, network, text, sentiment, eng
         </span>
         <p className="min-w-0 flex-1 leading-tight">
           <span className={cn("font-semibold", dark ? "text-[0.8125rem]" : "block text-sm")}>{handle}</span>
-          <span className={cn("text-muted-foreground", dark ? "text-[0.71875rem]" : "block text-xs")}>
-            {dark ? " · " : null}
-            {time}
-          </span>
+          {time && (
+            <span className={cn("text-muted-foreground", dark ? "text-[0.71875rem]" : "block text-xs")}>
+              {dark ? " · " : null}
+              {time}
+            </span>
+          )}
         </p>
         <span className={cn("flex items-center gap-2", dark && "text-muted-foreground")}>
           <NetworkIcon network={network} className={dark ? "size-4" : "size-4.5"} />

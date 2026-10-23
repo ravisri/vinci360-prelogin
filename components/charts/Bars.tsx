@@ -27,6 +27,8 @@ type BarsProps = {
   valueLabels?: readonly (readonly string[])[]
   max?: number
   legend?: boolean
+  /** Category labels under the bars (off for small hero sketches that draw none). */
+  axis?: boolean
   width?: number
   height?: number
   className?: string
@@ -44,6 +46,7 @@ export function Bars({
   valueLabels,
   max,
   legend,
+  axis = true,
   width = 420,
   height = 100,
   className,
@@ -67,6 +70,8 @@ export function Bars({
           x: barX(i, si) + bw / 2,
           y: height - barH(v),
           dy: -5,
+          // Grouped bars: nudge the outer labels apart so neighbours never touch on narrow charts.
+          dx: k > 1 ? (si === 0 ? -2 : si === k - 1 ? 2 : 0) : 0,
           text: valueLabels[si]?.[i] ?? "",
           className: cn("tabular max-md:text-[10px]", si === 0 ? "fill-foreground" : "fill-muted-foreground", si === 0 && i === 0 && "font-bold"),
         })),
@@ -110,7 +115,7 @@ export function Bars({
         </ChartSvg>
         {values.length > 0 && <LabelLayer width={width} height={height} labels={values} />}
       </div>
-      <div aria-hidden="true" className="grid auto-cols-fr grid-flow-col text-center text-[0.6875rem] text-muted-foreground">
+      {axis && <div aria-hidden="true" className="grid auto-cols-fr grid-flow-col text-center text-[0.6875rem] text-muted-foreground">
         {labels.map((label, i) => (
           <span key={label + i} className={cn(i === highlight && "font-bold text-foreground")}>
             {labelsShort ? (
@@ -123,7 +128,7 @@ export function Bars({
             )}
           </span>
         ))}
-      </div>
+      </div>}
     </div>
   )
 }
